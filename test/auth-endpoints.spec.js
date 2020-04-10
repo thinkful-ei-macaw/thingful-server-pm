@@ -28,7 +28,9 @@ describe('Auth Endpoints', function() {
   afterEach('cleanup', () => helpers.cleanTables(db));
 
 
+
   describe('POST /api/auth/login', () => {
+    beforeEach('insert users', () => helpers.seedUsers( db, testUsers ) );
     const requiredFields = ['user_name', 'password'];
     requiredFields.forEach( field => {
       const loginAttemptBody = {
@@ -67,6 +69,7 @@ describe('Auth Endpoints', function() {
         user_name: testUser.user_name,
         password: testUser.password,
       }
+      
       const expectedToken = jwt.sign(
         { user_id: testUser.id }, // payload
         process.env.JWT_SECRET,
