@@ -1,15 +1,12 @@
 const knex = require('knex');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 
 describe('Auth Endpoints', function() {
   let db;
 
-  const {
-    testUsers,
-    testThings,
-  } = helpers.makeThingsFixtures();
+  const { testUsers } = helpers.makeThingsFixtures();
 
   const testUser = testUsers[0];
 
@@ -36,9 +33,9 @@ describe('Auth Endpoints', function() {
       const loginAttemptBody = {
         user_name: testUser.user_name,
         password: testUser.password
-      }
+      };
       it(`responds with 400 bad reqest when there is no ${field}`, () => {
-        delete loginAttemptBody[field]
+        delete loginAttemptBody[field];
         return supertest(app)
           .post('/api/auth/login')
           .send(loginAttemptBody)
@@ -48,27 +45,27 @@ describe('Auth Endpoints', function() {
       });
     });
 
-    it(`responds 400 'Invalid Credentials' when bad user_name`, () => {
-      const invalidUser = {user_name: 'user-not', password: 'existy'}
+    it('responds 400 \'Invalid Credentials\' when bad user_name', () => {
+      const invalidUser = {user_name: 'user-not', password: 'existy'};
       return supertest(app)
         .post('/api/auth/login')
         .send(invalidUser)
-        .expect(400, {error: 'Invalid Credentials'})
+        .expect(400, {error: 'Invalid Credentials'});
     });
 
-    it(`respond 400 'Invalid Credentials' when bad password`, () => {
-      const badPassword = { user_name: testUser.user_name, password: 'bad'}
+    it('respond 400 \'Invalid Credentials\' when bad password', () => {
+      const badPassword = { user_name: testUser.user_name, password: 'bad'};
       return supertest(app)
         .post('/api/auth/login')
         .send(badPassword)
-        .expect(400, {error: 'Invalid Credentials'})
+        .expect(400, {error: 'Invalid Credentials'});
     });
 
-    it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
+    it('responds 200 and JWT auth token using secret when valid credentials', () => {
       const userValidCreds = {
         user_name: testUser.user_name,
         password: testUser.password,
-      }
+      };
       
       const expectedToken = jwt.sign(
         { user_id: testUser.id }, // payload
@@ -77,14 +74,14 @@ describe('Auth Endpoints', function() {
           subject: testUser.user_name,
           algorithm: 'HS256',
         }
-      )
+      );
       return supertest(app)
         .post('/api/auth/login')
         .send(userValidCreds)
         .expect(200, {
           authToken: expectedToken,
-        })
-    })
+        });
+    });
   });
 
 });

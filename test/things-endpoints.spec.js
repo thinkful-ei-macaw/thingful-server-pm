@@ -69,14 +69,6 @@ describe('Things Endpoints', function() {
             .set('Authorization', helpers.makeAuthHeader(userInvalidCreds))
             .expect(401, { error: 'Unauthorized request' });
         });
-  
-        it('responds 401 \'Unauthorized request\' when invalid password', () => {
-          const userInvalidPass = { user_name: testUsers[0].user_name, password: 'wrong' };
-          return supertest(app)
-            .get(endpoint.path)
-            .set('Authorization', helpers.makeAuthHeader(userInvalidPass))
-            .expect(401, { error: 'Unauthorized request' });
-        });
       });
     });
     
